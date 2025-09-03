@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student/Admin Signup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0fff0; /* light green */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .signup-box {
+      width: 500px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    h2 {
+      text-align: center;
+      color: green;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    button {
+      background: green;
+      color: white;
+      font-weight: bold;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: darkgreen;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-box">
+    <h2>Signup Form</h2>
+    <form id="signupForm">
+      
+      <!-- Personal Info -->
+      <label>Full Name</label>
+      <input type="text" name="fullname" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" required>
+
+      <label>Date of Birth</label>
+      <input type="text" name="date of Birth" required>
+
+      <label>Gender</label>
+      <select id="Gender" name="gender" required>
+        <option value="">-- Choose --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        </select>
+      
+      <label>Matric / Reg No (Students Only)</label>
+      <input type="text" name="matric">
+
+      <label>Department</label>
+      <input type="text" name="department">
+
+      <!-- Role selection -->
+      <label>Select Role</label>
+      <select id="role" name="role" required>
+        <option value="">-- Choose --</option>
+        <option value="fresher">Fresher</option>
+        <option value="final_year">Final Year</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+
+  <script>
+    // Redirect to correct login page after signup
+    document.getElementById("signupForm").addEventListener("submit", function(event){
+      event.preventDefault(); // stop real submit for now
+
+      let role = document.getElementById("role").value;
+
+      if(role === "admin"){
+        window.location.href = "adminlogin.html";
+      }
+      else if(role === "final_year"){
+        window.location.href = "finalyearlogin.html";
+      }
+      else if(role === "fresher"){
+        window.location.href = "fresherlogin.html";
+      }
+      else {
+        alert("Please select a role");
+      }
+    });
+  </script>
+</body>
+</html>

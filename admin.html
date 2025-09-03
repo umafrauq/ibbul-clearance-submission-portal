@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Clearance Dashboard - IBBU Lapai</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      color: #333;
+    }
+
+    header {
+      background: green;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #002244;
+      color: #fff;
+      height: 100vh;
+      padding: 20px;
+      position: fixed;
+    }
+
+    .sidebar h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #ddd;
+      padding: 10px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+
+    .sidebar a:hover {
+      background: #004488;
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: 260px;
+      padding: 20px;
+      width: 100%;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+      display: none; /* Hidden until login */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #003366;
+      color: #fff;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-approve {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .btn-reject {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    .status {
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+
+    .approved {
+      color: #fff;
+      background: #28a745;
+    }
+
+    .rejected {
+      color: #fff;
+      background: #dc3545;
+    }
+
+    .pending {
+      color: #fff;
+      background: #6c757d;
+    }
+
+    /* Login Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .modal input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .modal button {
+      width: 100%;
+      padding: 10px;
+      background: #003366;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal button:hover {
+      background: #004488;
+    }
+  </style>
+</head>
+<body>
+
+<header>IBBU Lapai - Admin Clearance Dashboard</header>
+
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>Clearance Sections</h3>
+    <a data-section="Library">Library</a>
+    <a data-section="Faculty">Faculty</a>
+    <a data-section="Department">Department</a>
+    <a data-section="Clinic">Clinic</a>
+    <a data-section="Bursary">Bursary</a>
+    <a data-section="Settings">Settings</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Instructions card (shown first) -->
+    <div class="card" id="welcomeCard" style="display:block;">
+      <h2>Welcome to IBBU Lapai Clearance Dashboard</h2>
+      <p>Please follow the steps below to proceed:</p>
+      <ol>
+        <li>Select your clearance section (Library, Faculty, Department, Clinic, or Bursary) from the sidebar.</li>
+        <li>Enter your password in the login form.</li>
+        <li>View the student clearance files assigned to your section.</li>
+        <li>Approve or reject clearances with remarks where necessary.</li>
+      </ol>
+      <p><em>Note: Only authorized staff can access each section.</em></p>
+    </div>
+
+    <!-- Library -->
+    <div class="card" id="Library">
+      <h2>Library Clearance</h2>
+      <table>
+        <tr><th>Student Name</th><th>Matric No</th><th>Document</th><th>Remark</th><th>Status</th><th>Action</th></tr>
+        <tr>
+          <td>Umar Faruq</td><td>CSC/18/1234</td><td><a href="#">View File</a></td>
+          <td><textarea></textarea></td><td class="status pending">Pending</td>
+          <td><button class="btn btn-approve">Approve</button><button class="btn btn-reject">Reject</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Faculty -->
+    <div class="card" id="Faculty">
+      <h2>Faculty Clearance</h2>
+      <table>
+        <tr><th>Student Name</th><th>Matric No</th><th>Document</th><th>Remark</th><th>Status</th><th>Action</th></tr>
+        <tr>
+          <td>Aisha Musa</td><td>ENG/18/5678</td><td><a href="#">View File</a></td>
+          <td><textarea></textarea></td><td class="status pending">Pending</td>
+          <td><button class="btn btn-approve">Approve</button><button class="btn btn-reject">Reject</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Department -->
+    <div class="card" id="Department">
+      <h2>Department Clearance</h2>
+      <table>
+        <tr><th>Student Name</th><th>Matric No</th><th>Document</th><th>Remark</th><th>Status</th><th>Action</th></tr>
+        <tr>
+          <td>Summaiya Adamu</td><td>CSC/18/9876</td><td><a href="#">View File</a></td>
+          <td><textarea></textarea></td><td class="status pending">Pending</td>
+          <td><button class="btn btn-approve">Approve</button><button class="btn btn-reject">Reject</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Clinic -->
+    <div class="card" id="Clinic">
+      <h2>Clinic Clearance</h2>
+      <table>
+        <tr><th>Student Name</th><th>Matric No</th><th>Document</th><th>Remark</th><th>Status</th><th>Action</th></tr>
+        <tr>
+          <td>John Doe</td><td>MED/18/3333</td><td><a href="#">View File</a></td>
+          <td><textarea></textarea></td><td class="status pending">Pending</td>
+          <td><button class="btn btn-approve">Approve</button><button class="btn btn-reject">Reject</button></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Bursary -->
+    <div class="card" id="Bursary">
+      <h2>Bursary Clearance</h2>
+      <table>
+        <tr><th>Student Name</th><th>Matric No</th><th>Document</th><th>Remark</th><th>Status</th><th>Action</th></tr>
+        <tr>
+          <td>Mary James</td><td>BUS/18/2222</td><td><a href="#">View File</a></td>
+          <td><textarea></textarea></td><td class="status pending">Pending</td>
+          <td><button class="btn btn-approve">Approve</button><button class="btn btn-reject">Reject</button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Login -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <h3 id="modalTitle">Login</h3>
+    <input type="password" id="password" placeholder="Enter Password">
+    <button id="loginBtn">Login</button>
+    <p id="errorMsg" style="color:red; display:none;">Wrong password!</p>
+  </div>
+</div>
+
+<script>
+  const approveBtns = document.querySelectorAll(".btn-approve");
+  const rejectBtns = document.querySelectorAll(".btn-reject");
+  const modal = document.getElementById("loginModal");
+  const loginBtn = document.getElementById("loginBtn");
+  const passwordInput = document.getElementById("password");
+  const errorMsg = document.getElementById("errorMsg");
+  const modalTitle = document.getElementById("modalTitle");
+  const welcomeCard = document.getElementById("welcomeCard");
+
+  // Example passwords for sections
+  const sectionPasswords = {
+    "Library": "lib123",
+    "Faculty": "fac123",
+    "Department": "dep123",
+    "Clinic": "cli123",
+    "Bursary": "bur123",
+    "Settings": "set123"
+  };
+
+  let currentSection = "";
+
+  document.querySelectorAll(".sidebar a").forEach(link => {
+    link.addEventListener("click", () => {
+      currentSection = link.getAttribute("data-section");
+      modal.style.display = "flex";
+      modalTitle.textContent = `${currentSection} Login`;
+      passwordInput.value = "";
+      errorMsg.style.display = "none";
+    });
+  });
+
+  loginBtn.addEventListener("click", () => {
+    const enteredPass = passwordInput.value;
+    if (enteredPass === sectionPasswords[currentSection]) {
+      modal.style.display = "none";
+
+      // Hide welcome card
+      welcomeCard.style.display = "none";
+
+      // Hide all sections
+      document.querySelectorAll(".card").forEach(card => {
+        if(card.id !== "welcomeCard"){
+          card.style.display = "none";
+        }
+      });
+
+      // Show only the logged-in section
+      document.getElementById(currentSection).style.display = "block";
+    } else {
+      errorMsg.style.display = "block";
+    }
+  });
+
+  approveBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const row = e.target.closest("tr");
+      const statusCell = row.querySelector(".status");
+      statusCell.textContent = "Approved";
+      statusCell.className = "status approved";
+    });
+  });
+
+  rejectBtns.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const row = e.target.closest("tr");
+      const statusCell = row.querySelector(".status");
+      statusCell.textContent = "Rejected";
+      statusCell.className = "status rejected";
+    });
+  });
+</script>
+
+</body>
+</html>

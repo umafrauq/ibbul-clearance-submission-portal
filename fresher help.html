@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freshers Help Guide</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+      text-align: center;
+    }
+
+    header {
+      background: #228B22; /* Grass Green */
+      color: white;
+      padding: 20px;
+    }
+
+    header img {
+      height: 60px;
+      vertical-align: middle;
+      border-radius: 10px;
+    }
+
+    header h1 {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 24px;
+    }
+
+    .content {
+      margin: 40px auto;
+      max-width: 700px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .steps {
+      text-align: left;
+      margin-top: 20px;
+      line-height: 1.8;
+    }
+
+    .icon {
+      font-size: 60px;
+      margin: 20px 0;
+      animation: bounce 1.5s infinite;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 25px;
+      background: #228B22;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #1e7c1e;
+    }
+
+    footer {
+      background: #228B22;
+      color: white;
+      padding: 10px;
+      margin-top: 40px;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="ibb.jpg" alt="School Logo">
+    <h1>Freshers Help Guide</h1>
+  </header>
+
+  <div class="content">
+    <h2>Welcome, New Student! 🎉</h2>
+    <p>Follow these simple steps to complete your registration process:</p>
+
+    <div class="icon">🕺</div>
+
+    <div class="steps">
+      <ol>
+        <li>Create your account by clicking on <b>Get Started</b> below.</li>
+        <li>Fill in your personal details such as Name, Matric Number, Email, etc.</li>
+        <li>Upload your required documents (ID, admission letter, payment receipt).</li>
+        <li>Submit your registration form for verification.</li>
+        <li>After submission, log in using your details to check your status.</li>
+      </ol>
+    </div>
+
+    <a href="signupfreshers.html" class="btn">Get Started</a>
+  </div>
+
+  <footer>
+    &copy; 2025 IBBU Student Portal - All Rights Reserved
+  </footer>
+</body>
+</html>

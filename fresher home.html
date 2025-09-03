@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IBBU Lapai • Freshers Dashboard</title>
+<style>
+  :root{
+    --brand:#003366;
+    --brand-2:#0055aa;
+    --accent:#ffcc00;
+    --bg:#f4f8ff;
+    --card:#ffffff;
+    --ink:#1d2939;
+    --muted:#667085;
+    --success:#27ae60;
+    --warn:#ffb200;
+    --danger:#e74c3c;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue", sans-serif;
+    background: var(--bg); color: var(--ink);
+  }
+
+  /* Header */
+  header{
+    position: sticky; top:0; z-index:20;
+    background: green; color:#fff; padding:12px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+    box-shadow:0 4px 16px rgba(0,0,0,.15);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand img{ height:44px; width:44px; object-fit:contain; border-radius: 10px; }
+  .brand h1{ font-size:18px; margin:0; font-weight:800; letter-spacing:.2px; }
+  .welcome{ font-weight:600; }
+
+  /* Layout */
+  .wrap{
+    width: min(1200px, 92vw);
+    margin: 20px auto 60px;
+    display:grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 880px){
+    .wrap{ grid-template-columns: 1fr; }
+  }
+
+  .card{
+    background: var(--card);
+    border-radius:16px;
+    box-shadow:0 10px 24px rgba(2,16,40,.06);
+    padding:16px;
+  }
+  .card h2{
+    font-size:16px; margin:0 0 12px 0; color:var(--brand);
+    letter-spacing:.2px;
+  }
+
+  /* Profile card */
+  .profile{
+    position: sticky; top:84px;
+  }
+  .avatar{
+    width:96px; height:96px; border-radius:50%; overflow:hidden; background:#e6edf8;
+    display:grid; place-items:center; font-size:28px; font-weight:800; color:var(--brand);
+    box-shadow: inset 0 0 0 3px #fff, 0 6px 14px rgba(0,0,0,.08);
+    margin-bottom:12px;
+  }
+  .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .profile .row{ display:flex; gap:10px; align-items:center; margin:6px 0; }
+  .label{ width:120px; color:var(--muted); font-size:13px; }
+  .value, .profile input{
+    flex:1; font-size:14px;
+  }
+  .profile input{
+    border:1px solid #d0d7e2; border-radius:10px; padding:8px 10px; outline:none; background:#fff;
+  }
+  .profile .btns{ display:flex; gap:10px; margin-top:12px; }
+  .btn{
+    appearance:none; border:none; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer;
+    background:var(--brand); color:#fff; transition: transform .2s, box-shadow .2s, background .2s;
+  }
+  .btn:hover{ transform: translateY(-1px); box-shadow:0 10px 16px rgba(0,0,0,.12); background:var(--brand-2); }
+  .btn.secondary{ background:#eef4ff; color:var(--brand); }
+  .btn.danger{ background:var(--danger); }
+  .hint{ font-size:12px; color:var(--muted); margin-top:6px; }
+
+  /* Stats */
+  .stats{ display:grid; grid-template-columns: repeat(3,1fr); gap:12px; margin-bottom:12px; }
+  .stat{
+    background: linear-gradient(135deg, #ffffff, #f4f9ff);
+    padding:12px; border-radius:12px; box-shadow: inset 0 0 0 1px #edf2fb;
+  }
+  .stat .k{ font-size:24px; font-weight:900; color:var(--brand); }
+  .stat .t{ font-size:12px; color:var(--muted); margin-top:4px; }
+
+  /* Uploads */
+  .uploads .item{
+    display:grid; grid-template-columns: 1.2fr auto auto 1fr auto; /* + actions col */
+    gap:10px; align-items:center;
+    padding:10px; border-radius:12px; background:#f7faff; margin:8px 0;
+    border:1px solid #e6ecf5;
+  }
+  .uploads .name{ font-weight:700; }
+  .uploads .choose{
+    position:relative;
+  }
+  .uploads input[type=file]{ display:none; }
+  .tag{
+    font-size:12px; padding:6px 10px; border-radius:999px; font-weight:800; letter-spacing:.3px;
+    display:inline-block; text-transform:uppercase;
+  }
+  .tag.pending{ background:#fff5cc; color:#7a5a00; }
+  .tag.uploaded{ background:#e8fff0; color:#056e2e; }
+  .fname{ font-size:12px; color:#475467; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .choose .btn{ padding:8px 12px; border-radius:9px; font-size:13px; background:var(--accent); color:#111; }
+  .choose .btn:hover{ transform: translateY(-1px) scale(1.02); }
+
+  /* Show/hide remove button (new, minimal) */
+  .uploads .item .remove{ display:none; }
+
+  /* Progress */
+  .progress{
+    margin-top:14px; background:#eef4ff; border-radius:12px; padding:10px;
+    box-shadow: inset 0 0 0 1px #dfe8fb;
+  }
+  .bar{ height:12px; background:#e9efff; border-radius:999px; overflow:hidden; }
+  .bar > span{ display:block; height:100%; width:0; background:linear-gradient(90deg, #00b894, #27ae60); transition: width .4s; }
+  .ptext{ font-size:12px; color:#344054; margin-top:6px; }
+
+  /* Table: Submission Status */
+  .table{ width:100%; border-collapse: collapse; margin-top:12px; font-size:14px; }
+  .table th, .table td{ padding:10px 8px; text-align:left; border-bottom:1px solid #eef2f7; }
+  .table th{ color:#475467; font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:.4px; }
+
+  /* Notifications */
+  .notif{ display:flex; gap:10px; align-items:flex-start; padding:10px; border-radius:10px; background:#fff7e6; border:1px solid #ffe5b0; }
+  .notif + .notif{ margin-top:8px; }
+
+  /* Little dance on hover for action buttons */
+  .dance:hover{ animation: wiggle .35s ease-in-out 1; }
+  @keyframes wiggle{
+    0%{ transform: rotate(0); }
+    33%{ transform: rotate(-2deg) translateY(-1px); }
+    66%{ transform: rotate(2deg) translateY(-1px); }
+    100%{ transform: rotate(0); }
+  }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <img src="ibb.jpg" alt="IBBU Logo">
+      <h1>IBBU Lapai • Freshers Dashboard</h1>
+    </div>
+    <div class="welcome" id="welcomeTxt">Welcome, Student 👋</div>
+  </header>
+
+  <div class="wrap">
+    <!-- Left: Profile -->
+    <aside class="card profile">
+      <h2>My Profile</h2>
+      <div class="avatar" id="avatarBox" title="Click to change photo">
+        <span id="avatarInitials">ST</span>
+        <img id="avatarImg" alt="" style="display:none;" />
+      </div>
+      <input type="file" id="avatarInput" accept="image/*" hidden />
+      <div class="hint">Tip: click the avatar to upload your photo.</div>
+
+      <div class="row">
+        <div class="label">Full Name</div>
+        <input id="p_name" type="text" value="Umar Yusuf" disabled />
+      </div>
+      <div class="row">
+        <div class="label">Matric No</div>
+        <input id="p_matric" type="text" value="U22/FEA/0001" disabled />
+      </div>
+      <div class="row">
+        <div class="label">Department</div>
+        <input id="p_dept" type="text" value="Computer Science" disabled />
+      </div>
+      <div class="row">
+        <div class="label">Level</div>
+        <input id="p_level" type="text" value="100" disabled />
+      </div>
+      <div class="row">
+        <div class="label">Email</div>
+        <input id="p_email" type="email" value="umar@example.com" disabled />
+      </div>
+
+      <div class="btns">
+        <button class="btn dance" id="editBtn">Edit</button>
+        <button class="btn secondary dance" id="saveBtn" disabled>Save</button>
+        <button class="btn danger dance" id="resetBtn">Reset</button>
+      </div>
+      <div class="hint">Profile details are saved on this device (localStorage).</div>
+    </aside>
+
+    <!-- Right: Main area -->
+    <main>
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="k" id="statTotal">10</div>
+          <div class="t">Total Required</div>
+        </div>
+        <div class="stat">
+          <div class="k" id="statUploaded">0</div>
+          <div class="t">Uploaded</div>
+        </div>
+        <div class="stat">
+          <div class="k" id="statPending">10</div>
+          <div class="t">Pending</div>
+        </div>
+      </div>
+
+      <!-- Uploads -->
+      <section class="card uploads">
+        <h2>Required Documents</h2>
+
+        <!-- Upload row template repeated for each doc -->
+        <div class="item" data-doc="Admission Letter">
+          <div class="name">Admission Letter</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="JAMB Result Slip">
+          <div class="name">JAMB Result Slip</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="Birth Certificate / Declaration of Age">
+          <div class="name">Birth Certificate / Declaration of Age</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="O’Level Results (WAEC/NECO/GCE)">
+          <div class="name">O’Level Results (WAEC/NECO/GCE)</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="Indigene Certificate / State of Origin">
+          <div class="name">Indigene Certificate / State of Origin</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="Passport Photograph">
+          <div class="name">Passport Photograph</div>
+          <div class="choose">
+            <input type="file" accept="image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="Medical Certificate of Fitness">
+          <div class="name">Medical Certificate of Fitness</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="Acceptance Fee Receipt">
+          <div class="name">Acceptance Fee Receipt</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="School Fees Receipt">
+          <div class="name">School Fees Receipt</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <div class="item" data-doc="Course Registration Form">
+          <div class="name">Course Registration Form</div>
+          <div class="choose">
+            <input type="file" accept="application/pdf,image/*" />
+            <button class="btn dance" onclick="triggerFile(this)">Select File</button>
+          </div>
+          <span class="tag pending">Pending</span>
+          <div class="fname">No file selected</div>
+          <button class="btn danger dance remove" onclick="removeFile(this)" title="Remove selected file">Remove</button>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress">
+          <div class="bar"><span id="pbar"></span></div>
+          <div class="ptext" id="ptext">0/10 Completed</div>
+        </div>
+      </section>
+
+      <!-- Submission Status Table -->
+      <section class="card">
+        <h2>Submission Status</h2>
+        <table class="table" id="statusTable">
+          <thead>
+            <tr>
+              <th>Document</th>
+              <th>Status</th>
+              <th>File</th>
+              <th>Last Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled by JS -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Notifications -->
+      <section class="card">
+        <h2>Notifications</h2>
+        <div id="notifList">
+          <div class="notif">🔔 No new notifications yet. Upload your documents to get started.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+  /* ---------- Utilities ---------- */
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const storage = {
+    get(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }catch(e){ return fallback; } },
+    set(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+  };
+
+  const DOCS = [
+    "Admission Letter",
+    "JAMB Result Slip",
+    "Birth Certificate / Declaration of Age",
+    "O’Level Results (WAEC/NECO/GCE)",
+    "Indigene Certificate / State of Origin",
+    "Passport Photograph",
+    "Medical Certificate of Fitness",
+    "Acceptance Fee Receipt",
+    "School Fees Receipt",
+    "Course Registration Form"
+  ];
+
+  /* ---------- Profile Logic ---------- */
+  const profileFields = ["p_name","p_matric","p_dept","p_level","p_email"];
+  const avatarBox = $("#avatarBox"), avatarImg = $("#avatarImg"), avatarInitials = $("#avatarInitials"), avatarInput = $("#avatarInput");
+
+  function initialsFromName(name){
+    return (name || "Student").split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+  }
+
+  function loadProfile(){
+    const prof = storage.get("freshers_profile", {
+      name: $("#p_name").value,
+      matric: $("#p_matric").value,
+      dept: $("#p_dept").value,
+      level: $("#p_level").value,
+      email: $("#p_email").value,
+      avatar: null
+    });
+    $("#p_name").value = prof.name;
+    $("#p_matric").value = prof.matric;
+    $("#p_dept").value = prof.dept;
+    $("#p_level").value = prof.level;
+    $("#p_email").value = prof.email;
+    $("#welcomeTxt").textContent = `Welcome, ${prof.name} 👋`;
+    if (prof.avatar){
+      avatarImg.src = prof.avatar;
+      avatarImg.style.display = "block";
+      avatarInitials.style.display = "none";
+    }else{
+      avatarImg.style.display = "none";
+      avatarInitials.style.display = "grid";
+      avatarInitials.textContent = initialsFromName(prof.name);
+    }
+  }
+  function saveProfile(){
+    const prof = {
+      name: $("#p_name").value.trim(),
+      matric: $("#p_matric").value.trim(),
+      dept: $("#p_dept").value.trim(),
+      level: $("#p_level").value.trim(),
+      email: $("#p_email").value.trim(),
+      avatar: storage.get("freshers_profile", {}).avatar ?? null
+    };
+    storage.set("freshers_profile", prof);
+    $("#welcomeTxt").textContent = `Welcome, ${prof.name} 👋`;
+    avatarInitials.textContent = initialsFromName(prof.name);
+  }
+
+  $("#editBtn").addEventListener("click", ()=>{
+    profileFields.forEach(id=>{ $("#"+id).disabled = false; });
+    $("#saveBtn").disabled = false;
+  });
+  $("#saveBtn").addEventListener("click", ()=>{
+    saveProfile();
+    profileFields.forEach(id=>{ $("#"+id).disabled = true; });
+    $("#saveBtn").disabled = true;
+  });
+  $("#resetBtn").addEventListener("click", ()=>{
+    localStorage.removeItem("freshers_profile");
+    localStorage.removeItem("freshers_uploads");
+    location.reload();
+  });
+
+  avatarBox.addEventListener("click", ()=> avatarInput.click());
+  avatarInput.addEventListener("change", (e)=>{
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const prof = storage.get("freshers_profile", {});
+      prof.avatar = reader.result;
+      storage.set("freshers_profile", prof);
+      loadProfile();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* ---------- Uploads Logic ---------- */
+  let uploads = storage.get("freshers_uploads", {}); // { docName: { fileName, status, updatedAt } }
+
+  function triggerFile(btn){
+    btn.closest(".choose").querySelector('input[type="file"]').click();
+  }
+
+  function formatDate(dt){
+    const d = dt ? new Date(dt) : new Date();
+    return d.toLocaleString();
+  }
+
+  function updateProgressUI(){
+    const total = DOCS.length;
+    const uploaded = DOCS.filter(n => uploads[n]?.status === "uploaded").length;
+    const pending = total - uploaded;
+    $("#statTotal").textContent = total;
+    $("#statUploaded").textContent = uploaded;
+    $("#statPending").textContent = pending;
+    const pct = Math.round((uploaded/total)*100);
+    $("#pbar").style.width = pct + "%";
+    $("#ptext").textContent = `${uploaded}/${total} Completed`;
+  }
+
+  function refreshRows(){
+    // update row badges & filenames & remove button
+    $$(".uploads .item").forEach(row=>{
+      const doc = row.dataset.doc;
+      const data = uploads[doc];
+      const tag = row.querySelector(".tag");
+      const fname = row.querySelector(".fname");
+      const removeBtn = row.querySelector(".remove");
+      if (data && data.status === "uploaded"){
+        tag.classList.remove("pending");
+        tag.classList.add("uploaded");
+        tag.textContent = "Uploaded";
+        fname.textContent = data.fileName;
+        if (removeBtn) removeBtn.style.display = "inline-block";
+      } else {
+        tag.classList.add("pending");
+        tag.classList.remove("uploaded");
+        tag.textContent = "Pending";
+        fname.textContent = "No file selected";
+        if (removeBtn) removeBtn.style.display = "none";
+      }
+    });
+    // table
+    const tbody = $("#statusTable tbody");
+    tbody.innerHTML = "";
+    DOCS.forEach(doc=>{
+      const data = uploads[doc];
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${doc}</td>
+        <td>${data?.status === "uploaded" ? '<span class="tag uploaded">Uploaded</span>' : '<span class="tag pending">Pending</span>'}</td>
+        <td>${data?.fileName ?? '-'}</td>
+        <td>${data?.updatedAt ? formatDate(data.updatedAt) : '-'}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+    updateProgressUI();
+  }
+
+  // file changed -> mark uploaded
+  $$(".uploads input[type='file']").forEach(inp=>{
+    inp.addEventListener("change", e=>{
+      const row = inp.closest(".item");
+      const doc = row.dataset.doc;
+      if (!inp.files || !inp.files[0]) return;
+      const file = inp.files[0];
+      uploads[doc] = {
+        fileName: file.name,
+        status: "uploaded",
+        updatedAt: new Date().toISOString()
+      };
+      storage.set("freshers_uploads", uploads);
+      refreshRows();
+    });
+  });
+
+  // NEW: remove uploaded file (revert to Pending)
+  function removeFile(btn){
+    const row = btn.closest(".item");
+    const doc = row.dataset.doc;
+    const input = row.querySelector('input[type="file"]');
+    if (input) input.value = "";           // clear file input
+    delete uploads[doc];                   // remove saved entry
+    storage.set("freshers_uploads", uploads);
+    refreshRows();                         // redraw UI & stats
+  }
+
+  /* ---------- Init ---------- */
+  loadProfile();
+  refreshRows();
+
+</script>
+</body>
+</html>
